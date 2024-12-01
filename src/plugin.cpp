@@ -178,10 +178,10 @@ void apply_patch()
     const char *const pattern =
         /* test    al, al           */ "84 C0 "
         /* jz      short loc_xxxx   */ "74 ?? "
-        /* cmp     r8d, [rbx+14h]   */ "44 3B 43 14 "
+        /* cmp     r8d, [rbx+xxh]   */ "44 3B 43 ?? "
         /* jnz     short loc_xxxx   */ "75 ?? "
-        /* cmp     [rbx+70h], cl    */ "38 4B 70 "
-        /* jz      short loc_xxxx   */ "74 3B";
+        /* cmp     [rbx+xxh], cl    */ "38 4B ?? "
+        /* jz      short loc_xxxx   */ "74 ??";
 
     const uintptr_t code_to_patch_address = PLH::findPattern( range_start, range_end - range_start, pattern );
 
