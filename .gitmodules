@@ -1,0 +1,3 @@
+[submodule "external/PolyHook2"]
+	path = external/PolyHook2
+	url = https://github.com/stevemk14ebr/PolyHook_2_0.git
