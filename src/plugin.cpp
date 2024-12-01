@@ -48,21 +48,41 @@ public:
         m_log_fptr = nullptr;
     }
 
-    void operator()( const int32_t type, const char *format, ... ) const
+    void message( const char *format, ... )
     {
-        if( m_log_fptr == nullptr )
-        {
-            return;
-        }
-
         va_list va;
         va_start( va, format );
-        char message[ 1024 ];
-        vsprintf_s( message, format, va );
+        log_tagged( SCS_SDK_LOG_message, format, va );
         va_end( va );
-        char tagged_message[ 1024 ];
-        sprintf_s( tagged_message, "[prism_default_depth_stencil_view_patch] %s", message );
-        m_log_fptr( type, tagged_message );
+    }
+
+    void warning( const char *format, ... )
+    {
+        va_list va;
+        va_start( va, format );
+        log_tagged( SCS_SDK_LOG_warning, format, va );
+        va_end( va );
+    }
+
+    void error( const char *format, ... )
+    {
+        va_list va;
+        va_start( va, format );
+        log_tagged( SCS_SDK_LOG_error, format, va );
+        va_end( va );
+    }
+
+private:
+    void log_tagged( const int32_t type, const char *format, va_list va )
+    {
+        if( m_log_fptr )
+        {
+            char formatted[ 1024 ];
+            vsprintf_s( formatted, format, va );
+            char tagged_message[ 1024 ];
+            sprintf_s( tagged_message, "[prism_default_depth_stencil_view_patch] %s", formatted );
+            m_log_fptr( type, tagged_message );
+        }
     }
 
 private:
@@ -194,7 +214,7 @@ void apply_patch()
         throw exception_local_string_t( "Unable to hook game code" );
     }
 
-    log( SCS_SDK_LOG_message, "Successfully patched game code at: %p", code_to_patch_ptr );
+    log.message( "Successfully patched game code at: %p", code_to_patch_ptr );
 }
 
 extern "C" __declspec( dllexport ) int32_t scs_telemetry_init( const uint32_t version, const scs_sdk_params_t *const params )
@@ -220,11 +240,11 @@ extern "C" __declspec( dllexport ) int32_t scs_telemetry_init( const uint32_t ve
 
     if( already_patched )
     {
-        log( SCS_SDK_LOG_error, "Game code is already patched." );
+        log.error( "Game code is already patched." );
         return SCS_SDK_RESULT_ok;
     }
 
-    log( SCS_SDK_LOG_message, "Patcher originally made for game version: %s.", PATCH_VERSION );
+    log.message( "Patcher originally made for game version: %s.", PATCH_VERSION );
 
     try
     {
@@ -234,7 +254,7 @@ extern "C" __declspec( dllexport ) int32_t scs_telemetry_init( const uint32_t ve
     }
     catch( const std::exception &e )
     {
-        log( SCS_SDK_LOG_error, "%s.", e.what() );
+        log.error( "%s.", e.what() );
         return SCS_SDK_RESULT_generic_error;
     }
 }
