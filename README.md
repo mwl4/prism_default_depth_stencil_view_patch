@@ -12,7 +12,7 @@ If your console and game.log is full of following error:
 00:01:43.484 : <ERROR> [dx11] Error creating default depth stencil view (0x80070057)
 00:01:43.484 : <ERROR> [dx11] Error creating default depth stencil view (0x80070057)
 ```
-and potentially 
+and potentially you have issue with graphics in your game (transparent game world),  
 then this patch is for you. The patch will not fix any other error.
 
 ## Download
@@ -43,5 +43,17 @@ In `Documents/Euro Truck Simulator 2/game.log` or `Documents/American Truck Simu
 ```
 
 `<ERROR> [dx11] Error creating default depth stencil view (0x80070057)` error should be gone now.
+
+## Build
+
+Note: this section is for developers wanting to compile plugin on them own. Typically, as a user you are not supposed to do it. Download plugin from Releases page instead.
+
+```
+git clone https://github.com/mwl4/prism_default_depth_stencil_view_patch.git
+cd prism_default_depth_stencil_view_patch
+git submodule update --init --recursive
+cmake -B build .
+```
+open `build\prism_default_depth_stencil_view_patch.sln` in your Visual Studio, choose your configuration, then `Build` -> `Build Solution`. DLL file you will find in `build\<configuration>\`
 
 Enjoy
